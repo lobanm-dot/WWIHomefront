@@ -1,10 +1,1487 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>WWI Home Front</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WWI Home Front Mobilization Board</title>
+
+<style>
+:root{
+  --navy:#17365d;
+  --blue:#254e7f;
+  --red:#b6322f;
+  --cream:#f4eddd;
+  --paper:#fffaf0;
+  --gold:#d1a03a;
+  --ink:#202733;
+  --muted:#667085;
+  --shadow:0 8px 24px rgba(0,0,0,.14);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--ink);
+  background:linear-gradient(#e4dcc9,#f6f1e7);
+  min-height:100vh;
+}
+
+.wrap{
+  max-width:1200px;
+  margin:auto;
+  padding:18px;
+}
+
+/* HEADER */
+.top{
+  background:linear-gradient(180deg,#254e7f,#17365d);
+  color:white;
+  border:1px solid #d6b363;
+  border-radius:18px;
+  padding:17px 18px;
+  box-shadow:var(--shadow);
+  position:sticky;
+  top:8px;
+  z-index:5;
+}
+
+.stripe{
+  height:8px;
+  margin:-9px -7px 12px;
+  border-radius:8px;
+  background:repeating-linear-gradient(
+    90deg,
+    #bd3733 0 60px,
+    #f5efdf 60px 120px,
+    #244d80 120px 180px
+  );
+}
+
+.top h1{
+  font-family:Georgia,serif;
+  margin:0;
+  letter-spacing:.03em;
+  font-size:1.6rem;
+}
+
+.top p{
+  margin:3px 0 11px;
+  color:#dce6f3;
+}
+
+.scores{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.pill{
+  background:#fff9eb;
+  color:var(--navy);
+  border:1px solid #dfbc69;
+  border-radius:999px;
+  padding:8px 13px;
+  font-weight:800;
+}
+
+/* SCREENS */
+.screen{
+  display:none;
+  margin-top:20px;
+}
+
+.screen.active{
+  display:block;
+}
+
+.panel,
+.card{
+  background:var(--paper);
+  border:1px solid #d8c7a2;
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+
+.panel{padding:24px}
+
+/* INTRO */
+.hero{
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:22px;
+  align-items:center;
+}
+
+.hero h2{
+  font-family:Georgia,serif;
+  color:var(--navy);
+  font-size:2.1rem;
+  line-height:1.08;
+  margin:.4rem 0 .8rem;
+}
+
+.hero p,
+.hero li{
+  line-height:1.58;
+}
+
+.heroPoster{
+  min-height:470px;
+  background:#ece4d5;
+  border:3px solid #dfc67e;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.heroPoster img{
+  width:100%;
+  max-height:520px;
+  object-fit:contain;
+}
+
+.kicker{
+  display:inline-block;
+  background:var(--red);
+  color:white;
+  border-radius:999px;
+  padding:6px 11px;
+  font-size:.78rem;
+  letter-spacing:.07em;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+/* CONTROLS */
+input[type=text],
+select,
+textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccb98e;
+  background:white;
+  border-radius:11px;
+  font:inherit;
+}
+
+button{
+  border:0;
+  border-radius:11px;
+  padding:12px 18px;
+  font-size:1rem;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.primary{
+  background:var(--red);
+  color:white;
+}
+
+.secondary{
+  background:var(--navy);
+  color:white;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+/* PROGRESS */
+.progress{
+  height:14px;
+  margin-bottom:15px;
+  background:#d8cfbb;
+  border:1px solid #c9b78e;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.progress div{
+  height:100%;
+  width:0;
+  background:linear-gradient(
+    90deg,
+    var(--red),
+    var(--gold),
+    var(--navy)
+  );
+  transition:.25s;
+}
+
+/* GAME */
+.game{
+  display:grid;
+  grid-template-columns:1.06fr .94fr;
+  gap:18px;
+}
+
+.photoCard{
+  background:var(--paper);
+  border:1px solid #d8c7a2;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+
+.photoWrap{
+  height:500px;
+  padding:12px;
+  background:#eae3d6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.photoWrap img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.photoInfo{
+  padding:17px 19px;
+  border-top:1px solid #dfd1b5;
+}
+
+.photoInfo h2{
+  font-family:Georgia,serif;
+  color:var(--navy);
+  margin:.5rem 0;
+  font-size:1.65rem;
+}
+
+.prompt{
+  line-height:1.55;
+  color:#344054;
+}
+
+/* BIG SEPARATE CAPTION */
+.caption{
+  display:none;
+  margin-top:14px;
+  padding:14px 16px;
+  background:#fff3cd;
+  border-left:6px solid var(--gold);
+  border-radius:10px;
+  font-size:1.08rem;
+  line-height:1.55;
+}
+
+.caption.show{display:block}
+
+/* DECISION PANEL */
+.decision{
+  padding:20px;
+}
+
+.decision h3{
+  font-family:Georgia,serif;
+  color:var(--navy);
+  font-size:1.5rem;
+  margin:0 0 15px;
+}
+
+.decision label{
+  display:block;
+  font-weight:900;
+  color:#243f69;
+  margin:15px 0 7px;
+}
+
+input[type=range]{
+  width:100%;
+  accent-color:var(--red);
+}
+
+.scale{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:.8rem;
+}
+
+.value{
+  margin-top:5px;
+  color:var(--navy);
+  font-weight:900;
+}
+
+/* FEEDBACK */
+.feedback,
+.historian{
+  display:none;
+  margin-top:14px;
+  padding:14px;
+  border-radius:12px;
+  line-height:1.52;
+}
+
+.feedback.show{
+  display:block;
+  background:#edf4fb;
+  border:1px solid #cad9ec;
+}
+
+.historian.show{
+  display:block;
+  background:#f8ecd0;
+  border:1px solid #d8bd7b;
+}
+
+.tags span{
+  display:inline-block;
+  margin:7px 5px 0 0;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#eee4cf;
+  color:var(--navy);
+  font-size:.8rem;
+  font-weight:800;
+}
+
+/* END */
+.finalGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin:18px 0;
+}
+
+.stat{
+  text-align:center;
+  padding:18px;
+  background:white;
+  border:1px solid #dbcaa5;
+  border-radius:14px;
+}
+
+.stat b{
+  display:block;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.stat strong{
+  display:block;
+  color:var(--navy);
+  font-size:2rem;
+  margin-top:7px;
+}
+
+textarea{
+  min-height:110px;
+  margin-top:7px;
+}
+
+@media(max-width:900px){
+  .hero,
+  .game,
+  .finalGrid{
+    grid-template-columns:1fr;
+  }
+
+  .photoWrap{height:360px}
+
+  .top{position:static}
+}
+</style>
 </head>
+
 <body>
-  <h1>WWI Home Front is working.</h1>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="stripe"></div>
+
+  <h1>U.S. HOME FRONT MOBILIZATION BOARD</h1>
+
+  <p>
+    Washington, D.C. • 1918 •
+    How did Americans support the war — and when did wartime support go too far?
+  </p>
+
+  <div class="scores">
+    <div class="pill" id="teamPill">Team: —</div>
+    <div class="pill">
+      Case <span id="caseNow">0</span>/<span id="caseTotal">0</span>
+    </div>
+    <div class="pill">
+      Evidence Points: <span id="points">0</span>
+    </div>
+    <div class="pill">
+      War Effort: <span id="warScore">0</span>
+    </div>
+    <div class="pill">
+      Democracy: <span id="demoScore">0</span>
+    </div>
+  </div>
+</header>
+
+
+<!-- START SCREEN -->
+<section id="start" class="screen active">
+
+  <div class="panel hero">
+
+    <div>
+
+      <span class="kicker">Mission Briefing</span>
+
+      <h2>
+        America Is at War.
+        How Should the Home Front Respond?
+      </h2>
+
+      <p>
+        Study each historical image <strong>before</strong>
+        you see its caption.
+      </p>
+
+      <p>Your team must decide:</p>
+
+      <ol>
+        <li>
+          <strong>What kind of home-front support is shown?</strong>
+        </li>
+
+        <li>
+          <strong>How much did it help the war effort?</strong>
+          Rate it from 1–5.
+        </li>
+
+        <li>
+          <strong>What did it do to American society?</strong>
+          Rate it from harmful to positive.
+        </li>
+      </ol>
+
+      <p>
+        After you submit, the actual historical caption appears
+        in large text beneath the image.
+      </p>
+
+      <label><strong>Team name:</strong></label>
+
+      <input
+        id="teamName"
+        type="text"
+        placeholder="Example: Team Pershing"
+      >
+
+      <div class="actions">
+        <button class="primary" id="startBtn">
+          Begin Investigation
+        </button>
+      </div>
+
+    </div>
+
+    <div class="heroPoster">
+      <img id="heroImg" alt="Team Work Wins World War I poster">
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- GAME -->
+<section id="play" class="screen">
+
+  <div class="progress">
+    <div id="bar"></div>
+  </div>
+
+  <div class="game">
+
+    <div class="photoCard">
+
+      <div class="photoWrap">
+        <img id="caseImg" alt="Historical World War I home front source">
+      </div>
+
+      <div class="photoInfo">
+
+        <span class="kicker" id="caseLabel">
+          Case File
+        </span>
+
+        <h2 id="caseTitle"></h2>
+
+        <div class="prompt" id="casePrompt"></div>
+
+        <div class="caption" id="captionBox"></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="card decision">
+
+      <h3>War Board Decision</h3>
+
+      <label>
+        1. What type of home-front support is this?
+      </label>
+
+      <select id="category"></select>
+
+
+      <label>
+        2. How much did it help the war effort?
+      </label>
+
+      <input
+        id="war"
+        type="range"
+        min="1"
+        max="5"
+        value="3"
+      >
+
+      <div class="scale">
+        <span>1 = Very little</span>
+        <span>5 = Major help</span>
+      </div>
+
+      <div class="value">
+        Your rating:
+        <span id="warVal">3</span>/5
+      </div>
+
+
+      <label>
+        3. What did it do to American society?
+      </label>
+
+      <input
+        id="demo"
+        type="range"
+        min="-2"
+        max="2"
+        value="0"
+      >
+
+      <div class="scale">
+        <span>-2 = Harmful</span>
+        <span>0 = Mixed</span>
+        <span>+2 = Positive</span>
+      </div>
+
+      <div class="value">
+        Your rating:
+        <span id="demoVal">0</span>
+      </div>
+
+
+      <div class="actions">
+
+        <button class="primary" id="submitBtn">
+          Submit Judgment
+        </button>
+
+        <button
+          class="secondary"
+          id="nextBtn"
+          style="display:none"
+        >
+          Next Case
+        </button>
+
+      </div>
+
+
+      <div class="feedback" id="feedback"></div>
+
+
+      <div class="historian" id="historian">
+
+        <strong>Historian Check</strong>
+
+        <div class="tags" id="tags"></div>
+
+        <p id="note"></p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FINAL SCREEN -->
+<section id="finish" class="screen">
+
+  <div class="panel">
+
+    <span class="kicker">
+      Home Front After-Action Report
+    </span>
+
+    <h2 style="font-family:Georgia,serif;color:#17365d">
+      What kind of home front did America build?
+    </h2>
+
+    <div class="finalGrid">
+
+      <div class="stat">
+        <b>Evidence Points</b>
+        <strong id="finalPoints"></strong>
+      </div>
+
+      <div class="stat">
+        <b>War Effort Score</b>
+        <strong id="finalWar"></strong>
+      </div>
+
+      <div class="stat">
+        <b>Democracy Score</b>
+        <strong id="finalDemo"></strong>
+      </div>
+
+    </div>
+
+    <p id="summary" style="line-height:1.6"></p>
+
+    <label>
+      <strong>Final Claim:</strong>
+      The American home front helped the war effort because...
+      but it also created problems when...
+    </label>
+
+    <textarea
+      placeholder="Write your team's historical claim here."
+    ></textarea>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* Wikimedia gives us the actual image file without needing
+   an images folder in GitHub. */
+
+const COMMONS =
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/";
+
+function commons(filename){
+  return COMMONS + encodeURIComponent(filename);
+}
+
+
+/* SORTING CATEGORIES */
+
+const categories = [
+  "Production & Labor",
+  "Food & Conservation",
+  "Financing the War",
+  "Military Service",
+  "Volunteering & Relief",
+  "Patriotism & Propaganda",
+  "Surveillance / Pressure"
+];
+
+
+/* HOME FRONT CASES */
+
+const cards = [
+
+{
+  title:"Red Cross Parade",
+
+  img:commons(
+    "American Red Cross - Soliciting Funds - Miscellaneous - American Red Cross Parade, Birmingham, Alabama, May 21, 1918 - NARA - 20802974.jpg"
+  ),
+
+  prompt:
+    "What kind of support are these civilians providing? How directly could it help soldiers and the war effort?",
+
+  caption:
+    "American Red Cross Parade, Birmingham, Alabama, May 21, 1918. Photograph by the Birmingham View Company.",
+
+  category:"Volunteering & Relief",
+  war:4,
+  demo:2,
+
+  note:
+    "The Red Cross raised money and supplies and provided medical and relief work. It turned civilian volunteering into direct wartime support."
+},
+
+
+{
+  title:"Women at the Stock Boards",
+
+  img:commons(
+    "Women in Waldorf-Astoria.jpg"
+  ),
+
+  prompt:
+    "Women are doing work that had usually been done by men. What does that suggest about wartime labor?",
+
+  caption:
+    "Women operate tickers and stock-exchange boards at the Waldorf-Astoria Hotel during World War I.",
+
+  category:"Production & Labor",
+  war:3,
+  demo:2,
+
+  note:
+    "Wartime labor shortages opened more jobs to women and helped keep businesses and the civilian economy functioning."
+},
+
+
+{
+  title:"Immigrant Women Make American Flags",
+
+  img:commons(
+    "Patriotic old women - American Flag.jpg"
+  ),
+
+  prompt:
+    "Is this mainly about production, patriotism, Americanization, or something else?",
+
+  caption:
+    "Women born in Hungary, Galicia, Russia, Germany, and Romania make American flags under the instruction of Rose Radin, about 1918.",
+
+  category:"Patriotism & Propaganda",
+  war:2,
+  demo:1,
+
+  note:
+    "The photograph promoted wartime unity and Americanization. It supported morale more than direct military production."
+},
+
+
+{
+  title:"Eat Less — Save Food",
+
+  img:
+    "https://tile.loc.gov/storage-services/service/pnp/cph/3g00000/3g02000/3g02900/3g02975v.jpg",
+
+  prompt:
+    "Why would the government care what ordinary Americans ate at home?",
+
+  caption:
+    "U.S. Food Administration poster urging Americans to eat more corn, oats, rye, fish, fruits, vegetables, and potatoes while eating less wheat, meat, sugar, and fats to save food for the Army and the Allies, 1917.",
+
+  category:"Food & Conservation",
+  war:4,
+  demo:2,
+
+  note:
+    "Voluntary food conservation freed important foods for soldiers and Allied nations without requiring Americans to stop producing or working."
+},
+
+
+{
+  title:"Save Sugar",
+
+  img:commons(
+    "Sugar. 1- none on fruits, 2- none in desserts, 3- less on cereals, 4- less in coffee or tea, 5- less in preserving, 6- l - NARA - 512507.jpg"
+  ),
+
+  prompt:
+    "This poster asks families to change everyday habits. How useful could that be to a nation at war?",
+
+  caption:
+    'U.S. Food Administration poster "Sugar — Save It," encouraging Americans to reduce sugar use during World War I.',
+
+  category:"Food & Conservation",
+  war:4,
+  demo:2,
+
+  note:
+    "Food conservation spread responsibility for the war effort across ordinary American households."
+},
+
+
+{
+  title:"John Meints Is Tarred and Feathered",
+
+  img:commons(
+    "John Meintz, punished during World War I - NARA - 283634.jpg"
+  ),
+
+  prompt:
+    "This was done in the name of patriotism. Did it actually strengthen the war effort? What did it do to society?",
+
+  caption:
+    "John Meints was tarred and feathered in Minnesota after being accused of failing to support war-bond drives during World War I.",
+
+  category:"Surveillance / Pressure",
+  war:1,
+  demo:-2,
+
+  note:
+    "Mob violence could frighten people into conformity, but it violated individual rights and showed the dangerous side of wartime patriotism."
+},
+
+
+{
+  title:"War Garden",
+
+  img:commons(
+    "Victorygarden usa.jpg"
+  ),
+
+  prompt:
+    "Growing vegetables at home seems small. Could thousands of families doing it make a difference?",
+
+  caption:
+    "World War I-era war-garden image encouraging civilians to grow more of their own food.",
+
+  category:"Food & Conservation",
+  war:4,
+  demo:2,
+
+  note:
+    "War gardens increased the food supply and involved families and communities directly in wartime conservation."
+},
+
+
+{
+  title:"American Protective League",
+
+  img:commons(
+    "American Protective League to U. S. Food Administration re, Carl A. Rink - NARA - 295923.jpg"
+  ),
+
+  prompt:
+    "Citizens are watching and reporting other citizens. Is that useful wartime vigilance or dangerous pressure?",
+
+  caption:
+    "American Protective League letter to the U.S. Food Administration concerning Carl A. Rink. The League investigated suspected disloyalty and violations of wartime rules.",
+
+  category:"Surveillance / Pressure",
+  war:2,
+  demo:-2,
+
+  note:
+    "The League sometimes helped authorities enforce wartime rules, but private surveillance and suspicion threatened civil liberties, particularly for German Americans."
+},
+
+
+{
+  title:"Babe Ruth Registers for the Draft",
+
+  img:commons(
+    "World War I Draft Registration Card for George Herman Ruth - NARA - 641780.gif"
+  ),
+
+  prompt:
+    "Even famous athletes were required to register. How important was military conscription to the war effort?",
+
+  caption:
+    'World War I draft registration card for George Herman "Babe" Ruth, June 5, 1917.',
+
+  category:"Military Service",
+  war:5,
+  demo:0,
+
+  note:
+    "The Selective Service system supplied millions of soldiers. It was extremely important militarily, although compulsory service also raised questions about individual freedom."
+},
+
+
+{
+  title:"Buy a Liberty Bond",
+
+  img:commons(
+    "You buy a Liberty Bond lest I perish.jpg"
+  ),
+
+  prompt:
+    "Wars are expensive. How could civilians who never went overseas still help finance the fighting?",
+
+  caption:
+    'Charles R. Macauley poster, "You buy a Liberty Bond lest I perish," 1917.',
+
+  category:"Financing the War",
+  war:5,
+  demo:1,
+
+  note:
+    "Liberty Bonds helped finance the enormous cost of war. Bond campaigns were useful, although they sometimes created pressure to publicly prove patriotism."
+},
+
+
+{
+  title:"Women Rivet Heaters at Puget Sound",
+
+  img:commons(
+    "Photograph of Women Rivet Heaters at Puget Sound Navy Yard - NARA - 522877.gif"
+  ),
+
+  prompt:
+    "What happens to the labor force when millions of men enter military service?",
+
+  caption:
+    "Women rivet heaters and passers working in ship construction at the Puget Sound Navy Yard, photographed May 29, 1919.",
+
+  category:"Production & Labor",
+  war:5,
+  demo:2,
+
+  note:
+    "Women's industrial labor directly supported shipbuilding and expanded women's experience in jobs traditionally held by men."
+},
+
+
+{
+  title:"Team Work Wins!",
+
+  img:commons(
+    "Team work wins! Your work here makes their work over there possible LCCN00652947.jpg"
+  ),
+
+  prompt:
+    "This poster makes a direct connection between workers at home and soldiers overseas. What is that connection?",
+
+  caption:
+    'U.S. Army Ordnance Department poster: "Team Work Wins! Your work here makes their work over there possible," 1917.',
+
+  category:"Patriotism & Propaganda",
+  war:4,
+  demo:1,
+
+  note:
+    "The poster encouraged workers to view producing weapons, ammunition, equipment, and supplies as patriotic service."
+},
+
+
+/* ADDED SOURCE #1 */
+{
+  title:"Four Minute Men",
+
+  img:commons(
+    "4 minute men, a message from the government at Washington LCCN2003652827.jpg"
+  ),
+
+  prompt:
+    "Thousands of volunteers gave short pro-war speeches in theaters and public places. Helpful persuasion or too much government influence?",
+
+  caption:
+    "Committee on Public Information poster promoting the Four Minute Men, volunteers who delivered short pro-war speeches in theaters and public gatherings.",
+
+  category:"Patriotism & Propaganda",
+  war:3,
+  demo:0,
+
+  note:
+    "The Four Minute Men helped build public support for the war, but they also show how aggressively the government promoted the pro-war message."
+},
+
+
+/* ADDED SOURCE #2 */
+{
+  title:"Don't Talk — Spies Are Listening",
+
+  img:commons(
+    "Don't talk, the web is spun for you with invisible threads, keep out of it, help to destroy it-spies are listening LCCN93515950.jpg"
+  ),
+
+  prompt:
+    "Is warning Americans about spies responsible wartime caution, fear-based propaganda, or both?",
+
+  caption:
+    '1918 American poster: "Don\'t talk ... spies are listening," depicting Germany\'s Kaiser Wilhelm II as a spider.',
+
+  category:"Patriotism & Propaganda",
+  war:2,
+  demo:-1,
+
+  note:
+    "Protecting sensitive information made sense during wartime, but constant warnings about spies could also encourage fear, suspicion, and self-censorship."
+},
+
+
+/* ADDED SOURCE #3 */
+{
+  title:"African American Home-Front Labor",
+
+  img:
+    "https://www.archives.gov/files/research/african-americans/wwi/23922137.jpg",
+
+  prompt:
+    "World War I created labor shortages and new opportunities. How did African American workers fit into the wartime home front?",
+
+  caption:
+    "African American civilian government employees march in a Third Liberty Loan parade in 1918. Wartime labor shortages also contributed to the Great Migration as Black Americans moved north and west seeking industrial employment.",
+
+  category:"Production & Labor",
+  war:4,
+  demo:1,
+
+  note:
+    "African American workers contributed to wartime labor and financing. World War I created new economic opportunities, but segregation and discrimination remained powerful."
+}
+
+];
+
+
+/* GAME VARIABLES */
+
+let current = 0;
+let points = 0;
+let warTotal = 0;
+let democracyTotal = 0;
+let answered = false;
+
+
+const $ = id =>
+  document.getElementById(id);
+
+
+/* BUILD CATEGORY MENU */
+
+$("caseTotal").textContent = cards.length;
+
+categories.forEach(category => {
+
+  const option =
+    document.createElement("option");
+
+  option.value = category;
+  option.textContent = category;
+
+  $("category").appendChild(option);
+
+});
+
+
+/* INTRO POSTER */
+
+$("heroImg").src = commons(
+  "Team work wins! Your work here makes their work over there possible LCCN00652947.jpg"
+);
+
+
+/* SLIDER VALUES */
+
+$("war").addEventListener("input", () => {
+  $("warVal").textContent =
+    $("war").value;
+});
+
+
+$("demo").addEventListener("input", () => {
+
+  const value =
+    Number($("demo").value);
+
+  $("demoVal").textContent =
+    value > 0
+      ? "+" + value
+      : value;
+
+});
+
+
+/* START */
+
+$("startBtn").addEventListener(
+  "click",
+  () => {
+
+    const team =
+      $("teamName").value.trim() ||
+      "Unnamed Team";
+
+    $("teamPill").textContent =
+      "Team: " + team;
+
+    showScreen("play");
+
+    renderCase();
+
+  }
+);
+
+
+/* SUBMIT */
+
+$("submitBtn").addEventListener(
+  "click",
+  submitCase
+);
+
+
+/* NEXT */
+
+$("nextBtn").addEventListener(
+  "click",
+  () => {
+
+    current++;
+
+    if(current >= cards.length){
+
+      finishGame();
+
+      return;
+
+    }
+
+    renderCase();
+
+  }
+);
+
+
+/* SCREEN SWITCH */
+
+function showScreen(id){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen =>
+      screen.classList.remove("active")
+    );
+
+  $(id).classList.add("active");
+
+}
+
+
+/* DISPLAY CASE */
+
+function renderCase(){
+
+  answered = false;
+
+  const card =
+    cards[current];
+
+  $("caseNow").textContent =
+    current + 1;
+
+  $("caseLabel").textContent =
+    "Case File " +
+    String(current + 1).padStart(2,"0");
+
+  $("caseTitle").textContent =
+    card.title;
+
+  $("casePrompt").textContent =
+    card.prompt;
+
+  $("caseImg").src =
+    card.img;
+
+  $("category").value =
+    categories[0];
+
+  $("war").value = 3;
+  $("warVal").textContent = "3";
+
+  $("demo").value = 0;
+  $("demoVal").textContent = "0";
+
+  $("captionBox")
+    .classList.remove("show");
+
+  $("captionBox").textContent = "";
+
+  $("feedback")
+    .className = "feedback";
+
+  $("historian")
+    .className = "historian";
+
+  $("submitBtn").style.display =
+    "inline-block";
+
+  $("nextBtn").style.display =
+    "none";
+
+  $("bar").style.width =
+    (
+      current /
+      cards.length *
+      100
+    ) + "%";
+
+}
+
+
+/* SCORE A CASE */
+
+function submitCase(){
+
+  if(answered) return;
+
+  answered = true;
+
+  const card =
+    cards[current];
+
+  const category =
+    $("category").value;
+
+  const war =
+    Number($("war").value);
+
+  const democracy =
+    Number($("demo").value);
+
+  warTotal += war;
+
+  democracyTotal += democracy;
+
+
+  let earned = 0;
+  let messages = [];
+
+
+  /* SORTING */
+
+  if(category === card.category){
+
+    earned += 8;
+
+    messages.push(
+      "✔ Strong category match."
+    );
+
+  }else{
+
+    messages.push(
+      "Category check: historians would most likely place this under <b>" +
+      card.category +
+      "</b>."
+    );
+
+  }
+
+
+  /* WAR RATING */
+
+  const warDifference =
+    Math.abs(
+      war -
+      card.war
+    );
+
+  if(warDifference === 0){
+
+    earned += 6;
+
+  }else if(warDifference === 1){
+
+    earned += 4;
+
+  }else{
+
+    earned += 1;
+
+  }
+
+  if(warDifference <= 1){
+
+    messages.push(
+      "✔ Your war-effort rating is defensible."
+    );
+
+  }else{
+
+    messages.push(
+      "War-effort check: a strong evidence-based rating would be around <b>" +
+      card.war +
+      "/5</b>."
+    );
+
+  }
+
+
+  /* DEMOCRACY RATING */
+
+  const democracyDifference =
+    Math.abs(
+      democracy -
+      card.demo
+    );
+
+  if(democracyDifference === 0){
+
+    earned += 6;
+
+  }else if(democracyDifference === 1){
+
+    earned += 4;
+
+  }else{
+
+    earned += 1;
+
+  }
+
+  if(democracyDifference <= 1){
+
+    messages.push(
+      "✔ Your society rating is defensible."
+    );
+
+  }else{
+
+    messages.push(
+      "Society check: a strong evidence-based rating would be around <b>" +
+      formatScore(card.demo) +
+      "</b>."
+    );
+
+  }
+
+
+  points += earned;
+
+
+  /* UPDATE SCORES */
+
+  $("points").textContent =
+    points;
+
+  $("warScore").textContent =
+    warTotal;
+
+  $("demoScore").textContent =
+    democracyTotal;
+
+
+  /* BIG CAPTION REVEAL */
+
+  $("captionBox").innerHTML =
+    "<strong>HISTORICAL CAPTION:</strong><br>" +
+    card.caption;
+
+  $("captionBox")
+    .classList.add("show");
+
+
+  /* FEEDBACK */
+
+  $("feedback").innerHTML =
+    "<strong>Evidence Points: " +
+    earned +
+    "/20</strong><br>" +
+    messages.join("<br>");
+
+  $("feedback")
+    .className =
+    "feedback show";
+
+
+  /* HISTORIAN CHECK */
+
+  $("tags").innerHTML =
+    "<span>" +
+    card.category +
+    "</span>" +
+
+    "<span>War Effort: " +
+    card.war +
+    "/5</span>" +
+
+    "<span>Democracy: " +
+    formatScore(card.demo) +
+    "</span>";
+
+
+  $("note").textContent =
+    card.note;
+
+  $("historian")
+    .className =
+    "historian show";
+
+
+  $("submitBtn").style.display =
+    "none";
+
+  $("nextBtn").style.display =
+    "inline-block";
+
+
+  $("bar").style.width =
+    (
+      (current + 1) /
+      cards.length *
+      100
+    ) + "%";
+
+}
+
+
+/* FORMAT +2 / -2 */
+
+function formatScore(number){
+
+  return number > 0
+    ? "+" + number
+    : String(number);
+
+}
+
+
+/* FINISH */
+
+function finishGame(){
+
+  showScreen("finish");
+
+  $("finalPoints").textContent =
+    points;
+
+  $("finalWar").textContent =
+    warTotal;
+
+  $("finalDemo").textContent =
+    democracyTotal;
+
+
+  let democracyMessage;
+
+  if(democracyTotal < 0){
+
+    democracyMessage =
+      "Your team noticed a major tension between mobilizing the country for war and protecting democratic rights.";
+
+  }else if(democracyTotal < 10){
+
+    democracyMessage =
+      "Your team saw the home front as a mixed story: effective mobilization alongside real pressure on rights and dissent.";
+
+  }else{
+
+    democracyMessage =
+      "Your team judged most home-front participation positively while still recognizing serious examples of coercion and intolerance.";
+
+  }
+
+
+  $("summary").innerHTML =
+    "<strong>Historical pattern:</strong> " +
+    "Food, money, labor, military service, volunteering, and propaganda all helped mobilize the United States. " +
+    democracyMessage;
+
+}
+
+</script>
+
 </body>
 </html>
